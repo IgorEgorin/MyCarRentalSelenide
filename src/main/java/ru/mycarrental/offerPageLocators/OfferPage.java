@@ -3,12 +3,27 @@ package ru.mycarrental.offerPageLocators;
 
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
+import ru.mycarrental.sberbankPageLocators.SberbankPage;
 
 import static com.codeborne.selenide.Selenide.$;
 
 public class OfferPage {
 
+    private SelenideElement errorMessageAllClassOfferPage;
+
+    private SelenideElement pricePerDayWithDiscountFromOfferPage;
+    private SelenideElement priceNavigatorFromOfferPage;
+    private SelenideElement priceCameraFromOfferPage;
+    private SelenideElement priceFridgeFromOfferPage;
+    private SelenideElement priceKidSeatFromOfferPage;
+    private SelenideElement priceItogoFieldFromOfferPage;
+    private SelenideElement priceCarDeliveryToDestination;
+    private SelenideElement priceCarReturnBack;
+    private SelenideElement priceOnLinePaymentFieldFromOfferPage;
+
     private SelenideElement offerPageCheckBoxNavigator;
+    private SelenideElement offerPageListSelectQuantityOfNavigator;
+    private SelenideElement offerPageListSelectTwoUnitsNavigator;
     private SelenideElement offerPageCheckBoxCamera;
     private SelenideElement offerPageCheckBoxFridge;
     private SelenideElement offerPageCheckBoxKidSeat;
@@ -38,10 +53,26 @@ public class OfferPage {
     private SelenideElement offerPageTermsOfUse;
     private SelenideElement offerPageMakeAreservation;
 
-    private SelenideElement offerPageSuccesOrderTitle;
+
 
     public OfferPage() {
+
+        this.errorMessageAllClassOfferPage =
+                $("[class=\"errors\"]");
+
+        this.pricePerDayWithDiscountFromOfferPage = $(By.xpath("//div[@class=\"checkout-price for-desktop\"]//strong[@class=\"ng-binding\"]"));
+        this.priceNavigatorFromOfferPage = $("[ng-repeat=\"equip in selectedEquipment\"] [class=\"ng-binding\"]",0);
+        this.priceCameraFromOfferPage = $("[ng-repeat=\"equip in selectedEquipment\"] [class=\"ng-binding\"]",1);
+        this.priceFridgeFromOfferPage = $("[ng-repeat=\"equip in selectedEquipment\"] [class=\"ng-binding\"]",2);
+        this.priceKidSeatFromOfferPage = $("[ng-repeat=\"equip in selectedEquipment\"] [class=\"ng-binding\"]",3);
+        this.priceItogoFieldFromOfferPage = $(By.xpath("//div[@class=\"checkout-price-total flex flex-sb\"]//strong"));
+        this.priceCarDeliveryToDestination = $("[ng-show=\"extras.pick_up_location_fee > 0\"] [class=\"ng-binding\"]");
+        this.priceCarReturnBack = $("[ng-show=\"extras.drop_off_location_fee > 0\"] [class=\"ng-binding\"]");
+        this.priceOnLinePaymentFieldFromOfferPage = $("[class=\"checkout-price-total-value\"] [class=\"ng-binding\"]",0);
+
         this.offerPageCheckBoxNavigator = $("[class=\"checkout-sub-checkbox\"]", 0);
+        this.offerPageListSelectQuantityOfNavigator = $("[class=\"checkout-sub-qty\"]", 0);
+        this.offerPageListSelectTwoUnitsNavigator = $("[data-value=\"2\"]", 0);
         this.offerPageCheckBoxCamera = $("[class=\"checkout-sub-checkbox\"]", 1);
         this.offerPageCheckBoxFridge = $("[class=\"checkout-sub-checkbox\"]", 2);
         this.offerPageCheckBoxKidSeat = $("[class=\"checkout-sub-checkbox\"]", 3);
@@ -70,12 +101,14 @@ public class OfferPage {
         this.offerPageTermsOfUse = $("href=\"/user-agreement\"");
         this.offerPageMakeAreservation = $("[type=\"submit\"]");
 
-        this.offerPageSuccesOrderTitle = $("[class=\"checkout-form-title ng-binding\"]");
+
     }
 
-    public OfferPage selectOneNavigatorOneCameraOneFridgeTwoKidSeats() {
+    public OfferPage selectTwoNavigatorOneCameraOneFridgeTwoKidSeats() {
         System.out.println("select one navigator, one camera, one fridge, two kid seats on offer page");
         offerPageCheckBoxNavigator.click();
+        offerPageListSelectQuantityOfNavigator.click();
+        offerPageListSelectTwoUnitsNavigator.click();
         offerPageCheckBoxCamera.click();
         offerPageCheckBoxFridge.click();
         offerPageCheckBoxKidSeat.click();
@@ -151,15 +184,78 @@ public class OfferPage {
 
 
     public void clickOnCheckBoxIagreeAndPressSubmitButton() {
-        System.out.println("click on checkbox" + "I agree..." + "and press submit button");
+        System.out.println("click on checkbox" + " I agree... " + "and press submit button");
         offerPageCheckBoxIagree.click();
         offerPageMakeAreservation.click();
+        new SberbankPage().getSberbankPageTimer().isDisplayed();
     }
 
-    public SelenideElement getOfferPageSuccesOrderTitle() {
-        return offerPageSuccesOrderTitle;
+
+    public String getPricePerDayWithDiscountFromOfferPage() {
+        return pricePerDayWithDiscountFromOfferPage.getText();
+    }
+
+    public String getPriceItogoFieldFromOfferPage() {
+        System.out.println("take ITOGO price from offer page");
+        String priceIt =  priceItogoFieldFromOfferPage.getText().replaceAll(" ","");
+        if (priceIt.contains(",")){
+            priceIt = priceIt.replaceAll(",",".");
+        }
+        else priceIt = priceIt + ".00";
+        return priceIt;
+    }
+
+    public String getPriceOnLinePaymentFieldFromOfferPage() {
+        System.out.println("take online price from offer page");
+        String priceOnline =  priceOnLinePaymentFieldFromOfferPage.getText().replaceAll(" ","");
+        if (priceOnline.contains(",")){
+            priceOnline = priceOnline.replaceAll(",",".");
+        }
+        else priceOnline = priceOnline + ".00";
+        return priceOnline;
+    }
+
+    public void enterSurnameNamePhoneMail(String surname, String name, String phone, String mail){
+        offerPageSurname.sendKeys(surname);
+        offerPageName.sendKeys(name);
+        offerPagePhone.setValue(phone);
+        offerPageMail.sendKeys(mail);
+    }
+
+    public String getPriceNavigatorFromOfferPage() {
+        return priceNavigatorFromOfferPage.getText();
+    }
+
+    public String getPriceCameraFromOfferPage() {
+        return priceCameraFromOfferPage.getText();
+    }
+
+    public String getPriceFridgeFromOfferPage() {
+        return priceFridgeFromOfferPage.getText();
+    }
+
+    public String getPriceKidSeatFromOfferPage() {
+        return priceKidSeatFromOfferPage.getText();
+    }
+
+    public String getPriceCarDeliveryToDestination() {
+        return priceCarDeliveryToDestination.getText().replaceAll(" ","");
+    }
+
+    public String getPriceCarReturnBack() {
+        return priceCarReturnBack.getText().replaceAll(" ","");
+    }
+
+    public String getErrorMessageAllClassOfferPage() {
+        return errorMessageAllClassOfferPage.getText();
+    }
+
+    public SelenideElement getOfferPageMakeAreservation() {
+        return offerPageMakeAreservation;
     }
 }
+
+
 
 
 

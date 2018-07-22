@@ -6,6 +6,9 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class SberbankPage {
 
+    private SelenideElement sberbankPageItogoPrice;
+    private SelenideElement sberbankPageTimer;
+
     private SelenideElement sberbankPageCardNumber;
     private SelenideElement sberbankPageExpiredMonth;
     private SelenideElement sberbankPageExpiredYear;
@@ -14,6 +17,9 @@ public class SberbankPage {
     private SelenideElement sberbankPageSubmitButton;
 
     public SberbankPage() {
+        this.sberbankPageItogoPrice = $("#amount");
+        this.sberbankPageTimer = $("#numberCountdown");
+
         this.sberbankPageCardNumber = $("#iPAN_sub");
         this.sberbankPageExpiredMonth = $("#input-month");
         this.sberbankPageExpiredYear = $("#input-year");
@@ -32,4 +38,12 @@ public class SberbankPage {
         sberbankPageSubmitButton.click();
     }
 
+    public String getSberbankPageItogoPrice() {
+        return sberbankPageItogoPrice.getText().replaceAll(" RUB","");
+
+    }
+
+    public SelenideElement getSberbankPageTimer() {
+        return sberbankPageTimer;
+    }
 }

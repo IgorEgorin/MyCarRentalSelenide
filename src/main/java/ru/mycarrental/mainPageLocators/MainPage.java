@@ -1,17 +1,17 @@
 package ru.mycarrental.mainPageLocators;
 
 import com.codeborne.selenide.SelenideElement;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import ru.mycarrental.selectCarPageLocators.SelectCarPage;
 
-import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
 public class MainPage {
+    private SelenideElement mainPageErrorClassTakeCity;
+    private SelenideElement mainPageErrorClassReturnCity;
+    private SelenideElement mainPageErrorOrderLowerThan24Hours;
 
     private SelenideElement mainPageCityTake;
-    private SelenideElement mainPageCheckBoxReturnToAnotherPage;
+    private SelenideElement mainPageCheckBoxReturnInAnotherCity;
     private SelenideElement mainPageCityReturn;
     private SelenideElement mainPageDataTake;
     private SelenideElement mainPageTimeTake;
@@ -19,11 +19,17 @@ public class MainPage {
     private SelenideElement mainPageDataReturn;
     private SelenideElement mainPageTimeReturn;
     private SelenideElement mainPageTimeReturnValue15_00;
+    private SelenideElement mainPagePromoCodeCheckBox;
+    private SelenideElement mainPagePromoCodeField;
     private SelenideElement mainPageButtonFindCars;
 
     public MainPage() {
+        this.mainPageErrorClassTakeCity = $("[class=\"left-form-field error\"] [for=\"from-field\"]");
+        this.mainPageErrorClassReturnCity = $("[class=\"left-form-field error\"] [for=\"to-field\"]");
+        this.mainPageErrorOrderLowerThan24Hours = $("#swal2-content");
+
         this.mainPageCityTake = $("#from-field");
-        this.mainPageCheckBoxReturnToAnotherPage = $("[for=\"other-return\"]");
+        this.mainPageCheckBoxReturnInAnotherCity = $("[for=\"other-return\"]");
         this.mainPageCityReturn = $("#to-field");
         this.mainPageDataTake = $("#form-date-field");
         this.mainPageTimeTake = $("[class=\"sod_label\"]",0);
@@ -31,35 +37,85 @@ public class MainPage {
         this.mainPageDataReturn = $("#to-date-field");
         this.mainPageTimeReturn = $("[class=\"left-form-field-time\"]",1);
         this.mainPageTimeReturnValue15_00 = $("[data-value=\"15:00\"]",1);
+        this.mainPagePromoCodeCheckBox = $("[for=\"promo-label\"]");
+        this.mainPagePromoCodeField = $("[placeholder=\"Укажите промокод\"]");
         this.mainPageButtonFindCars = $("[type=\"button\"]");
     }
 
     public MainPage enterTakeAndReturnCities(String cityTake, String cityReturn) {
         System.out.println("enter Take And Return Cities");
         mainPageCityTake.setValue(cityTake).pressEnter();
-        mainPageCheckBoxReturnToAnotherPage.click();
+        mainPageCheckBoxReturnInAnotherCity.click();
         mainPageCityReturn.setValue(cityReturn).pressEnter();
         return new MainPage();
     }
 
-    public MainPage selectSevenDaysPeriod() {
-        System.out.println("select Seven Days Period ");
-        mainPageDataTake.click();
-        mainPageDataTake.sendKeys(Keys.RIGHT);
-        mainPageDataTake.pressEnter();
+    public MainPage selectDaysPeriod(String amountOfLEFTarrowClickInsideReturnCalendar) {
+        System.out.println("select days period ");
         mainPageDataReturn.click();
-        mainPageDataReturn.sendKeys(Keys.RIGHT);
+        for (int i = 0; i < Integer.valueOf(amountOfLEFTarrowClickInsideReturnCalendar); i++) {
+            mainPageDataReturn.sendKeys(Keys.LEFT);
+        }
         mainPageDataReturn.pressEnter();
         return new MainPage();
     }
 
-    public void selectTimeHalfOfDayPeriodAndPressFind() {
+    public MainPage selectTimeHalfOfDayPeriodAndPressFind() {
         System.out.println("select Time half of day period");
         mainPageTimeTake.click();
         mainPageTimeTakeValue13_00.click();
         mainPageTimeReturn.click();
         mainPageTimeReturnValue15_00.click();
-        mainPageButtonFindCars.click();
+        return new MainPage();
     }
 
+    public MainPage enterPromoCodeAndSubmitSearch(String promoCodeNumber) {
+        mainPagePromoCodeCheckBox.click();
+        mainPagePromoCodeField.sendKeys(promoCodeNumber);
+        mainPageButtonFindCars.click();
+        return new MainPage();
+    }
+
+    public MainPage setNewCalendarsDataBecauseCarsInListIsEnding() {
+        mainPageDataTake.click();
+        for (int i = 0; i < 10; i++) {
+            mainPageDataTake.sendKeys(Keys.RIGHT);
+
+        }
+        mainPageDataTake.pressEnter();
+        mainPageDataReturn.click();
+        for (int i = 0; i < 10; i++) {
+            mainPageDataReturn.sendKeys(Keys.RIGHT);
+        }
+        mainPageDataReturn.pressEnter();
+        return new MainPage();
+    }
+
+    public SelenideElement getMainPageButtonFindCars() {
+        return mainPageButtonFindCars;
+    }
+
+    public SelenideElement getMainPageErrorClassTakeCity() {
+        return mainPageErrorClassTakeCity;
+    }
+
+    public SelenideElement getMainPageErrorClassReturnCity() {
+        return mainPageErrorClassReturnCity;
+    }
+
+    public SelenideElement getMainPageCheckBoxReturnInAnotherCity() {
+        return mainPageCheckBoxReturnInAnotherCity;
+    }
+
+    public SelenideElement getMainPageDataTake() {
+        return mainPageDataTake;
+    }
+
+    public SelenideElement getMainPageDataReturn() {
+        return mainPageDataReturn;
+    }
+
+    public String getMainPageErrorOrderLowerThan24Hours() {
+        return mainPageErrorOrderLowerThan24Hours.getText();
+    }
 }

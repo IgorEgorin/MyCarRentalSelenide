@@ -9,7 +9,7 @@ import org.testng.annotations.BeforeMethod;
 public class Precondition extends InstanceForAllPages{
 
 
-    @BeforeMethod()
+    @BeforeMethod
     protected void setUpMethod() {
 
         ChromeDriverManager.getInstance().setup();
@@ -19,7 +19,7 @@ public class Precondition extends InstanceForAllPages{
 
     }
 
-    @AfterClass()
+    @AfterClass
     public void quit() {
         Selenide.close();
     }

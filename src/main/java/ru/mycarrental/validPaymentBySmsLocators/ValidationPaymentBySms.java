@@ -7,17 +7,30 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class ValidationPaymentBySms {
 
-    private SelenideElement validationPaymentBySmsField;
+    private SelenideElement validationPaymentBySmsItogoPrice;
+
+    private SelenideElement validationPaymentBySmsEnterNumberFromMessage;
     private SelenideElement validationPaymentBySmsSubmit;
 
     public ValidationPaymentBySms() {
-        this.validationPaymentBySmsField = $(By.xpath("//input[@name=\"password\"]"));
+        this.validationPaymentBySmsItogoPrice = $("[class=\"value\"]",1);
+
+        this.validationPaymentBySmsEnterNumberFromMessage = $(By.xpath("//input[@name=\"password\"]"));
         this.validationPaymentBySmsSubmit = $(By.xpath("//input[@value=\"Submit\"]"));
     }
 
     public ValidationPaymentBySms enterSmsAndSubmitApayment (String smsOnPaymentPage) {
-        validationPaymentBySmsField.sendKeys(smsOnPaymentPage);
+        validationPaymentBySmsEnterNumberFromMessage.sendKeys(smsOnPaymentPage);
         validationPaymentBySmsSubmit.click();
         return new ValidationPaymentBySms();
+    }
+
+    public String getValidationPaymentBySmsItogoPrice() {
+        String smsItogo = validationPaymentBySmsItogoPrice.getText().replaceAll(",","");
+        if (smsItogo.contains(".5 RUB")){
+            smsItogo = smsItogo.replaceAll(".5 RUB",".50");
+        }
+        else smsItogo =smsItogo.replaceAll(" RUB",".00");
+        return smsItogo;
     }
 }
